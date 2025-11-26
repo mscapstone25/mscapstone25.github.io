@@ -51,9 +51,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     await loadProducts();
 
-    document.getElementById('searchInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') performSearch();
-    });
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') performSearch();
+        });
+    }
+
+    const navSearchInput = document.getElementById('navSearchInput');
+    if (navSearchInput) {
+        navSearchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleNavSearch();
+        });
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('login') === 'true' || window.location.hash === '#login') {
@@ -184,14 +194,43 @@ function getProductSalesStats(productId) {
 
 // Search and filters
 function performSearch() {
-    searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchTerm = searchInput.value.toLowerCase().trim();
+    } else {
+        searchTerm = '';
+    }
     applyFilters();
 }
 
+function handleNavSearch() {
+    const navInput = document.getElementById('navSearchInput');
+    if (!navInput) return;
+    const query = navInput.value.trim();
+    const mainSearchInput = document.getElementById('searchInput');
+    if (mainSearchInput) {
+        mainSearchInput.value = query;
+    }
+    searchTerm = query.toLowerCase();
+    applyFilters();
+    const productsSection = document.querySelector('.products-section');
+    if (productsSection) {
+        productsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
 function applyFilters() {
-    const category = document.getElementById('categoryFilter').value;
-    const priceRange = document.getElementById('priceFilter').value;
-    const brand = document.getElementById('brandFilter').value;
+    const categoryFilter = document.getElementById('categoryFilter');
+    const priceFilter = document.getElementById('priceFilter');
+    const brandFilter = document.getElementById('brandFilter');
+    
+    const navCategoryFilter = document.getElementById('navCategoryFilter');
+    const navPriceFilter = document.getElementById('navPriceFilter');
+    const navBrandFilter = document.getElementById('navBrandFilter');
+    
+    const category = (categoryFilter ? categoryFilter.value : '') || (navCategoryFilter ? navCategoryFilter.value : '');
+    const priceRange = (priceFilter ? priceFilter.value : '') || (navPriceFilter ? navPriceFilter.value : '');
+    const brand = (brandFilter ? brandFilter.value : '') || (navBrandFilter ? navBrandFilter.value : '');
 
     filteredProducts = products.filter(product => {
         const matchesSearch = !searchTerm || product.name.toLowerCase().includes(searchTerm) || product.brand.toLowerCase().includes(searchTerm) || product.category.toLowerCase().includes(searchTerm) || (product.description && product.description.toLowerCase().includes(searchTerm));
@@ -205,6 +244,7 @@ function applyFilters() {
         return matchesSearch && matchesCategory && matchesPrice && matchesBrand;
     });
 
+    syncNavFiltersFromMain();
     renderProducts(filteredProducts);
 }
 
@@ -283,8 +323,10 @@ function renderComparison() {
     productsWithStats.forEach(product => {
         const isTopSelling = product.id === topSellingProduct.id && product.salesStats.totalQuantitySold > 0;
         const isMostStandout = product.id === mostStandoutProduct.id;
-        const scoreColor = product.standoutScore >= 70 ? '#4CAF50' : product.standoutScore >= 40 ? '#FF9800' : '#9E9E9E';
-        html += `<th class="comparison-product-header"><div class="product-name">${product.name}${isTopSelling ? ' <span style="background: #ffd700; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-left: 5px;">🏆 TOP SELLING</span>' : ''}${isMostStandout ? ' <span style="background: #2196F3; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-left: 5px;">⭐ MOST POPULAR</span>' : ''}</div><div class="product-brand">${product.brand}</div><div class="product-price">₱${product.price.toLocaleString()}</div><div style="margin: 8px 0; font-size: 12px; color: #666;"><div>📦 Sold: ${product.salesStats.totalQuantitySold} units</div><div>💰 Revenue: ₱${product.salesStats.totalRevenue.toLocaleString()}</div></div><div style="margin: 10px 0;"><div style="font-size: 11px; color: #666; margin-bottom: 4px;">Popularity Score</div><div style="background: #e0e0e0; border-radius: 10px; height: 20px; position: relative; overflow: hidden;"><div style="background: ${scoreColor}; height: 100%; width: ${product.standoutScore}%; border-radius: 10px; transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold;">${product.standoutScore}%</div></div></div><button class="remove-product" onclick="removeFromComparison(${product.id})">Remove</button></th>`;
+        const badgeTopSelling = isTopSelling ? ' <span style="background: linear-gradient(135deg, #ffd700, #ffed4e); color: #000; padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: bold; margin-left: 5px; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);">🏆 TOP SELLING</span>' : '';
+        const badgeMostPopular = isMostStandout ? ' <span style="background: linear-gradient(135deg, #00d1ff, #8a5cff); color: #fff; padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: bold; margin-left: 5px; box-shadow: 0 4px 12px rgba(0, 209, 255, 0.4);">⭐ MOST POPULAR</span>' : '';
+        const progressBarColor = product.standoutScore >= 70 ? 'linear-gradient(90deg, #00d1ff, #8a5cff)' : product.standoutScore >= 40 ? 'linear-gradient(90deg, #ff8c42, #ff4d00)' : 'rgba(160, 174, 192, 0.5)';
+        html += `<th class="comparison-product-header"><div class="product-name">${product.name}${badgeTopSelling}${badgeMostPopular}</div><div class="product-brand">${product.brand}</div><div class="product-price">₱${product.price.toLocaleString()}</div><div style="margin: 8px 0; font-size: 12px; color: var(--muted-text);"><div>📦 Sold: ${product.salesStats.totalQuantitySold} units</div><div>💰 Revenue: ₱${product.salesStats.totalRevenue.toLocaleString()}</div></div><div style="margin: 10px 0;"><div style="font-size: 11px; color: var(--muted-text); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em;">Popularity Score</div><div style="background: rgba(255, 255, 255, 0.05); border-radius: 10px; height: 22px; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);"><div style="background: ${progressBarColor}; height: 100%; width: ${product.standoutScore}%; border-radius: 10px; transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);">${product.standoutScore}%</div></div></div><button class="remove-product" onclick="removeFromComparison(${product.id})">Remove</button></th>`;
     });
     html += '</tr></thead><tbody><tr><td class="spec-label">Category</td>';
     selectedProductsArray.forEach(product => html += `<td>${product.category}</td>`);
@@ -390,7 +432,7 @@ function updateStaffUI() {
 
     if (isStaffLoggedIn || isAdminLoggedIn) {
         userInfo.classList.remove('hidden');
-        loginButton.classList.add('hidden');
+        if (loginButton) loginButton.classList.add('hidden');
         if (isAdminLoggedIn) {
             adminSection.classList.remove('hidden');
             staffSection.classList.add('hidden');
@@ -402,7 +444,7 @@ function updateStaffUI() {
         }
     } else {
         userInfo.classList.add('hidden');
-        loginButton.classList.remove('hidden');
+        if (loginButton) loginButton.classList.add('hidden');
         staffSection.classList.add('hidden');
         adminSection.classList.add('hidden');
     }
@@ -852,18 +894,19 @@ function updateBrandDropdowns() {
     const allBrands = new Set([...defaultBrands, ...uniqueBrands]);
     const sortedBrands = Array.from(allBrands).sort();
 
-    ['productBrand', 'editProductBrand', 'brandFilter'].forEach(id => {
+    ['productBrand', 'editProductBrand', 'brandFilter', 'navBrandFilter'].forEach(id => {
         const select = document.getElementById(id);
         if (!select) return;
         const currentValue = select.value;
-        select.innerHTML = id === 'brandFilter' ? '<option value="">All Brands</option>' : '<option value="">Select Brand</option>';
+        const isFilter = id === 'brandFilter' || id === 'navBrandFilter';
+        select.innerHTML = isFilter ? '<option value="">All Brands</option>' : '<option value="">Select Brand</option>';
         sortedBrands.forEach(brand => {
             const option = document.createElement('option');
             option.value = brand;
             option.textContent = brand;
             select.appendChild(option);
         });
-        if (id !== 'brandFilter') {
+        if (!isFilter) {
             const otherOption = document.createElement('option');
             otherOption.value = 'Other';
             otherOption.textContent = 'Other';
@@ -879,18 +922,19 @@ function updateCategoryDropdowns() {
     const allCategories = new Set([...defaultCategories, ...uniqueCategories]);
     const sortedCategories = Array.from(allCategories).sort();
 
-    ['productCategory', 'editProductCategory', 'categoryFilter'].forEach(id => {
+    ['productCategory', 'editProductCategory', 'categoryFilter', 'navCategoryFilter'].forEach(id => {
         const select = document.getElementById(id);
         if (!select) return;
         const currentValue = select.value;
-        select.innerHTML = id === 'categoryFilter' ? '<option value="">All Categories</option>' : '<option value="">Select Category</option>';
+        const isFilter = id === 'categoryFilter' || id === 'navCategoryFilter';
+        select.innerHTML = isFilter ? '<option value="">All Categories</option>' : '<option value="">Select Category</option>';
         sortedCategories.forEach(category => {
             const option = document.createElement('option');
             option.value = category;
             option.textContent = formatCategoryName(category);
             select.appendChild(option);
         });
-        if (id !== 'categoryFilter') {
+        if (!isFilter) {
             const otherOption = document.createElement('option');
             otherOption.value = 'Other';
             otherOption.textContent = 'Other';
@@ -900,12 +944,61 @@ function updateCategoryDropdowns() {
     });
 }
 
+function handleNavFilterChange(filterType) {
+    const filterMap = {
+        category: { main: 'categoryFilter', nav: 'navCategoryFilter' },
+        price: { main: 'priceFilter', nav: 'navPriceFilter' },
+        brand: { main: 'brandFilter', nav: 'navBrandFilter' }
+    };
+
+    const mapping = filterMap[filterType];
+    if (!mapping) return;
+
+    const navSelect = document.getElementById(mapping.nav);
+    const mainSelect = document.getElementById(mapping.main);
+
+    if (navSelect) {
+        if (mainSelect) {
+            mainSelect.value = navSelect.value;
+        }
+        applyFilters();
+    }
+}
+
+function syncNavFiltersFromMain() {
+    const filters = [
+        { main: 'categoryFilter', nav: 'navCategoryFilter' },
+        { main: 'priceFilter', nav: 'navPriceFilter' },
+        { main: 'brandFilter', nav: 'navBrandFilter' }
+    ];
+
+    filters.forEach(({ main, nav }) => {
+        const mainSelect = document.getElementById(main);
+        const navSelect = document.getElementById(nav);
+        if (mainSelect && navSelect) {
+            navSelect.value = mainSelect.value;
+        }
+    });
+}
+
 function goToLandingPage() {
-    document.getElementById('searchInput').value = '';
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.value = '';
+    const navSearchInput = document.getElementById('navSearchInput');
+    if (navSearchInput) navSearchInput.value = '';
     searchTerm = '';
-    document.getElementById('categoryFilter').value = '';
-    document.getElementById('priceFilter').value = '';
-    document.getElementById('brandFilter').value = '';
+    const categoryFilter = document.getElementById('categoryFilter');
+    const priceFilter = document.getElementById('priceFilter');
+    const brandFilter = document.getElementById('brandFilter');
+    if (categoryFilter) categoryFilter.value = '';
+    if (priceFilter) priceFilter.value = '';
+    if (brandFilter) brandFilter.value = '';
+    const navCategoryFilter = document.getElementById('navCategoryFilter');
+    const navPriceFilter = document.getElementById('navPriceFilter');
+    const navBrandFilter = document.getElementById('navBrandFilter');
+    if (navCategoryFilter) navCategoryFilter.value = '';
+    if (navPriceFilter) navPriceFilter.value = '';
+    if (navBrandFilter) navBrandFilter.value = '';
     selectedProducts.clear();
     updateCompareCount();
     hideComparison();
@@ -913,6 +1006,14 @@ function goToLandingPage() {
     renderProducts(products);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+function scrollToProducts() {
+    const section = document.querySelector('.products-section');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
 
 async function resetData() {
     if (confirm('Are you sure you want to reset all data? This will delete all current products, sales history, and analytics, and restore the default data. This action cannot be undone.')) {

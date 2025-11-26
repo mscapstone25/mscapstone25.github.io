@@ -16,18 +16,152 @@
             <div class="logo">
                 <h1 onclick="goToLandingPage()" style="cursor: pointer;">🏍️ MotorShop</h1>
             </div>
+            <div class="nav-filters">
+                <select id="navCategoryFilter" class="nav-filter-select" onchange="handleNavFilterChange('category')">
+                    <option value="">All Categories</option>
+                    <option value="engine">Engine Parts</option>
+                    <option value="brake">Brake Systems</option>
+                    <option value="tire">Tires</option>
+                    <option value="exhaust">Exhaust Systems</option>
+                    <option value="suspension">Suspension</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+                <select id="navPriceFilter" class="nav-filter-select" onchange="handleNavFilterChange('price')">
+                    <option value="">All Prices</option>
+                    <option value="0-100">₱0 - ₱100</option>
+                    <option value="100-500">₱100 - ₱500</option>
+                    <option value="500-1000">₱500 - ₱1,000</option>
+                    <option value="1000+">₱1,000+</option>
+                </select>
+                <select id="navBrandFilter" class="nav-filter-select" onchange="handleNavFilterChange('brand')">
+                    <option value="">All Brands</option>
+                    <option value="Honda">Honda</option>
+                    <option value="Yamaha">Yamaha</option>
+                </select>
+            </div>
             <nav class="nav">
+                <div class="nav-search">
+                    <input type="text" id="navSearchInput" class="nav-search-input"
+                        placeholder="Search parts... (engine, brake, tire)">
+                    <button class="nav-search-btn search-btn" onclick="handleNavSearch()">🔍 Search</button>
+                </div>
                 <div id="userInfo" class="user-info hidden">
                     <span id="userName"></span>
                     <button class="logout-btn" onclick="handleLogout()">Logout</button>
                 </div>
-                <button id="loginButton" class="login-btn" onclick="openLoginModal()">Login (Admin/Staff)</button>
+                <button id="loginButton" class="login-btn hidden" onclick="openLoginModal()">Login (Admin/Staff)</button>
             </nav>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <p class="hero-kicker">Street-built inventory intelligence</p>
+                    <h2>Fuel every garage build with pro-grade motorcycle parts.</h2>
+                    <p class="hero-subtitle">
+                        Track live stock, compare upgrades, and keep every ride ready for the street or the strip—
+                        all in one brutalist dark interface.
+                    </p>
+                    <div class="hero-cta">
+                        <button class="cta-btn primary" onclick="scrollToProducts()">Explore Parts</button>
+                        <button class="cta-btn ghost" onclick="openLoginModal()">Admin / Staff Login</button>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="hero-stat-card">
+                            <span>350+</span>
+                            <small>Performance SKUs</small>
+                        </div>
+                        <div class="hero-stat-card">
+                            <span>24/7</span>
+                            <small>Inventory Sync</small>
+                        </div>
+                        <div class="hero-stat-card">
+                            <span>3x</span>
+                            <small>Faster Decisions</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="animated-dashboard">
+                        <div class="dashboard-ring ring-1">
+                            <div class="ring-content">
+                                <div class="ring-icon">⚡</div>
+                                <div class="ring-label">Live Pulse</div>
+                            </div>
+                            <svg class="ring-svg" viewBox="0 0 100 100">
+                                <circle class="ring-progress" cx="50" cy="50" r="45" />
+                            </svg>
+                        </div>
+                        <div class="dashboard-ring ring-2">
+                            <div class="ring-content">
+                                <div class="ring-icon">🔧</div>
+                                <div class="ring-label">Build Ready</div>
+                            </div>
+                            <svg class="ring-svg" viewBox="0 0 100 100">
+                                <circle class="ring-progress" cx="50" cy="50" r="45" />
+                            </svg>
+                        </div>
+                        <div class="dashboard-ring ring-3">
+                            <div class="ring-content">
+                                <div class="ring-icon">📊</div>
+                                <div class="ring-label">Stock Alert</div>
+                            </div>
+                            <svg class="ring-svg" viewBox="0 0 100 100">
+                                <circle class="ring-progress" cx="50" cy="50" r="45" />
+                            </svg>
+                        </div>
+                        <div class="animated-particles">
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                        </div>
+                        <div class="rotating-gear gear-1">⚙️</div>
+                        <div class="rotating-gear gear-2">⚙️</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-glow"></div>
+        </section>
+
+        <!-- Feature Highlights -->
+        <section class="features-section">
+            <div class="container">
+                <div class="features-header">
+                    <p class="section-kicker">Garage / Street Flow</p>
+                    <h2>Obsessively tuned features for builders and crews.</h2>
+                    <p>Dark neon UI, responsive cards, and cinematic motion cues keep operations sharp and immersive.</p>
+                </div>
+                <div class="feature-grid">
+                    <article class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3>Live Inventory Pulse</h3>
+                        <p>Adjust stock inline with tactile controls and immediate visual feedback for every SKU.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon">🛠️</div>
+                        <h3>Build-ready Filtering</h3>
+                        <p>Stacked filters and search cues designed to surface the exact component in seconds.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Motion-guided UI</h3>
+                        <p>Micro-animations and neon glows draw attention to priority actions without feeling noisy.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Admin Control Strip</h3>
+                        <p>Analytics, income, and product management live side-by-side in the dashboard ribbon.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
         <!-- Staff Inventory Management Section -->
         <section id="staffInventorySection" class="staff-inventory-section hidden">
             <div class="container">
@@ -58,46 +192,6 @@
                         📊 Product Analytics
                         <span>Fast/slow moving items & low stock alerts</span>
                     </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Search and Filter Section -->
-        <section class="search-filter-section">
-            <div class="container">
-                <div class="search-bar-container">
-                    <input type="text" id="searchInput" class="search-input"
-                        placeholder="Search products... (e.g., engine, brake, tire)">
-                    <button class="search-btn" onclick="performSearch()">🔍 Search</button>
-                </div>
-
-                <div class="filter-container">
-                    <h3>Filters</h3>
-                    <div class="filters">
-                        <select id="categoryFilter" class="filter-select" onchange="applyFilters()">
-                            <option value="">All Categories</option>
-                            <option value="engine">Engine Parts</option>
-                            <option value="brake">Brake Systems</option>
-                            <option value="tire">Tires</option>
-                            <option value="exhaust">Exhaust Systems</option>
-                            <option value="suspension">Suspension</option>
-                            <option value="accessories">Accessories</option>
-                        </select>
-
-                        <select id="priceFilter" class="filter-select" onchange="applyFilters()">
-                            <option value="">All Prices</option>
-                            <option value="0-100">₱0 - ₱100</option>
-                            <option value="100-500">₱100 - ₱500</option>
-                            <option value="500-1000">₱500 - ₱1,000</option>
-                            <option value="1000+">₱1,000+</option>
-                        </select>
-
-                        <select id="brandFilter" class="filter-select" onchange="applyFilters()">
-                            <option value="">All Brands</option>
-                            <option value="Honda">Honda</option>
-                            <option value="Yamaha">Yamaha</option>
-                        </select>
-                    </div>
                 </div>
             </div>
         </section>
