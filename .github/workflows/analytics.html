@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Analytics - MotorShop</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1 onclick="window.location.href='index.html'" style="cursor: pointer;">🏍️ MotorShop</h1>
+            </div>
+            <nav class="nav">
+                <button class="back-btn" onclick="window.location.href='index.html'">← Back to Main</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="analytics-section">
+            <div class="container">
+                <div class="page-header">
+                    <div>
+                        <h1>📊 Product Analytics</h1>
+                        <p>Track product performance and inventory status</p>
+                    </div>
+                    <button class="refresh-btn" onclick="refreshAnalytics()" title="Refresh Analytics Data">🔄 Refresh</button>
+                </div>
+
+                <!-- Low Stock Alerts -->
+                <div class="analytics-section-card">
+                    <h2>⚠️ Low Stock Items (Need Restocking)</h2>
+                    <div id="lowStockItems" class="items-list">
+                        <!-- Low stock items will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Fast Moving Items -->
+                <div class="analytics-section-card">
+                    <h2>🚀 Fast Moving Items</h2>
+                    <p class="section-description">Products with highest sales volume</p>
+                    <div id="fastMovingItems" class="items-list">
+                        <!-- Fast moving items will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Slow Moving Items -->
+                <div class="analytics-section-card">
+                    <h2>🐌 Slow Moving Items</h2>
+                    <p class="section-description">Products with lowest sales volume</p>
+                    <div id="slowMovingItems" class="items-list">
+                        <!-- Slow moving items will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Sales Chart -->
+                <div class="analytics-section-card">
+                    <h2>📈 Top Selling Products</h2>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="analytics.js"></script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotorShop - Premium Motorcycle Parts & Accessories</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1 onclick="goToLandingPage()" style="cursor: pointer;">🏍️ MotorShop</h1>
+            </div>
+            <div class="nav-filters">
+                <select id="navCategoryFilter" class="nav-filter-select" onchange="handleNavFilterChange('category')">
+                    <option value="">All Categories</option>
+                    <option value="engine">Engine Parts</option>
+                    <option value="brake">Brake Systems</option>
+                    <option value="tire">Tires</option>
+                    <option value="exhaust">Exhaust Systems</option>
+                    <option value="suspension">Suspension</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+                <select id="navPriceFilter" class="nav-filter-select" onchange="handleNavFilterChange('price')">
+                    <option value="">All Prices</option>
+                    <option value="0-100">₱0 - ₱100</option>
+                    <option value="100-500">₱100 - ₱500</option>
+                    <option value="500-1000">₱500 - ₱1,000</option>
+                    <option value="1000+">₱1,000+</option>
+                </select>
+                <select id="navBrandFilter" class="nav-filter-select" onchange="handleNavFilterChange('brand')">
+                    <option value="">All Brands</option>
+                    <option value="Honda">Honda</option>
+                    <option value="Yamaha">Yamaha</option>
+                </select>
+            </div>
+            <nav class="nav">
+                <div class="nav-search">
+                    <input type="text" id="navSearchInput" class="nav-search-input"
+                        placeholder="Search parts... (engine, brake, tire)">
+                    <button class="nav-search-btn search-btn" onclick="handleNavSearch()">🔍 Search</button>
+                </div>
+                <div id="userInfo" class="user-info hidden">
+                    <span id="userName"></span>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+                <button id="loginButton" class="login-btn hidden" onclick="openLoginModal()">Login (Admin/Staff)</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <p class="hero-kicker">Street-built inventory intelligence</p>
+                    <h2>Fuel every garage build with pro-grade motorcycle parts.</h2>
+                    <p class="hero-subtitle">
+                        Track live stock, compare upgrades, and keep every ride ready for the street or the strip—
+                        all in one brutalist dark interface.
+                    </p>
+                    <div class="hero-cta">
+                        <button class="cta-btn primary" onclick="scrollToProducts()">Explore Parts</button>
+                        <button class="cta-btn ghost" onclick="openLoginModal()">Admin / Staff Login</button>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="hero-stat-card">
+                            <span>350+</span>
+                            <small>Performance SKUs</small>
+                        </div>
+                        <div class="hero-stat-card">
+                            <span>24/7</span>
+                            <small>Inventory Sync</small>
+                        </div>
+                        <div class="hero-stat-card">
+                            <span>3x</span>
+                            <small>Faster Decisions</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="animated-dashboard">
+                        <div class="dashboard-ring ring-1">
+                            <div class="ring-content">
+                                <div class="ring-icon">⚡</div>
+                                <div class="ring-label">Live Pulse</div>
+                            </div>
+                            <svg class="ring-svg" viewBox="0 0 100 100">
+                                <circle class="ring-progress" cx="50" cy="50" r="45" />
+                            </svg>
+                        </div>
+                        <div class="dashboard-ring ring-2">
+                            <div class="ring-content">
+                                <div class="ring-icon">🔧</div>
+                                <div class="ring-label">Build Ready</div>
+                            </div>
+                            <svg class="ring-svg" viewBox="0 0 100 100">
+                                <circle class="ring-progress" cx="50" cy="50" r="45" />
+                            </svg>
+                        </div>
+                        <div class="dashboard-ring ring-3">
+                            <div class="ring-content">
+                                <div class="ring-icon">📊</div>
+                                <div class="ring-label">Stock Alert</div>
+                            </div>
+                            <svg class="ring-svg" viewBox="0 0 100 100">
+                                <circle class="ring-progress" cx="50" cy="50" r="45" />
+                            </svg>
+                        </div>
+                        <div class="animated-particles">
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                            <div class="particle"></div>
+                        </div>
+                        <div class="rotating-gear gear-1">⚙️</div>
+                        <div class="rotating-gear gear-2">⚙️</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-glow"></div>
+        </section>
+
+        <!-- Feature Highlights -->
+        <section class="features-section">
+            <div class="container">
+                <div class="features-header">
+                    <p class="section-kicker">Garage / Street Flow</p>
+                    <h2>Obsessively tuned features for builders and crews.</h2>
+                    <p>Dark neon UI, responsive cards, and cinematic motion cues keep operations sharp and immersive.</p>
+                </div>
+                <div class="feature-grid">
+                    <article class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3>Live Inventory Pulse</h3>
+                        <p>Adjust stock inline with tactile controls and immediate visual feedback for every SKU.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon">🛠️</div>
+                        <h3>Build-ready Filtering</h3>
+                        <p>Stacked filters and search cues designed to surface the exact component in seconds.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Motion-guided UI</h3>
+                        <p>Micro-animations and neon glows draw attention to priority actions without feeling noisy.</p>
+                    </article>
+                    <article class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Admin Control Strip</h3>
+                        <p>Analytics, income, and product management live side-by-side in the dashboard ribbon.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Staff Inventory Management Section -->
+        <section id="staffInventorySection" class="staff-inventory-section hidden">
+            <div class="container">
+                <div class="staff-header">
+                    <h2>📦 Inventory Management</h2>
+                    <p>Manage product stock levels</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Section -->
+        <section id="adminDashboardSection" class="admin-dashboard-section hidden">
+            <div class="container">
+                <div class="admin-header">
+                    <h2>👑 Admin Dashboard</h2>
+                    <p>Analytics and Reports</p>
+                </div>
+                <div class="admin-buttons">
+                    <button class="admin-btn add-product-btn" onclick="openAddProductModal()">
+                        ➕ Add New Product
+                        <span>Add a new product to the inventory</span>
+                    </button>
+                    <button class="admin-btn income-btn" onclick="navigateToPage('income.html')">
+                        💰 Income Analytics
+                        <span>View daily, weekly, and monthly income</span>
+                    </button>
+                    <button class="admin-btn analytics-btn" onclick="navigateToPage('analytics.html')">
+                        📊 Product Analytics
+                        <span>Fast/slow moving items & low stock alerts</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Grid -->
+        <section class="products-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Products</h2>
+                    <button class="compare-btn" onclick="showComparison()">
+                        Compare Selected (<span id="compareCount">0</span>)
+                    </button>
+                </div>
+                <div id="productsGrid" class="products-grid">
+                    <!-- Products will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparisonSection" class="comparison-section hidden">
+            <div class="container">
+                <div class="comparison-header">
+                    <h2>Compare Products</h2>
+                    <button class="close-btn" onclick="hideComparison()">✕ Close</button>
+                </div>
+                <div id="comparisonTable" class="comparison-table">
+                    <!-- Comparison table will be dynamically generated -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+            <h2>Admin/Staff Login</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    <a href="register.html" style="color: #007bff; text-decoration: none;">Don't have an account?
+                        Register here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal hidden">
+        <div class="modal-content large-modal">
+            <span class="close-modal" onclick="closeAddProductModal()">&times;</span>
+            <h2>➕ Add New Product</h2>
+            <form id="addProductForm" onsubmit="handleAddProduct(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">Product Name *</label>
+                        <input type="text" id="productName" required
+                            placeholder="e.g., Honda Click 125/150/160 Piston Kit">
+                    </div>
+                    <div class="form-group">
+                        <label for="productBrand">Brand *</label>
+                        <select id="productBrand" required onchange="handleBrandSelection()">
+                            <option value="">Select Brand</option>
+                            <option value="Honda">Honda</option>
+                            <option value="Yamaha">Yamaha</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="customBrandInput" class="custom-brand-input hidden"
+                            placeholder="Enter brand name"
+                            style="margin-top: 8px; width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productCategory">Category *</label>
+                        <select id="productCategory" required onchange="handleCategorySelection()">
+                            <option value="">Select Category</option>
+                            <option value="engine">Engine Parts</option>
+                            <option value="brake">Brake Systems</option>
+                            <option value="tire">Tires</option>
+                            <option value="exhaust">Exhaust Systems</option>
+                            <option value="suspension">Suspension</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="customCategoryInput" class="custom-category-input hidden"
+                            placeholder="Enter category name"
+                            style="margin-top: 8px; width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price (₱) *</label>
+                        <input type="number" id="productPrice" required min="0" step="0.01" placeholder="1250">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productQuantity">Initial Stock Quantity *</label>
+                        <input type="number" id="productQuantity" required min="0" placeholder="15">
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">Image URL</label>
+                        <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" rows="3"
+                        placeholder="Brief description of the product"></textarea>
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 10px;">Product Specifications</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="specMaterial">Material</label>
+                        <input type="text" id="specMaterial" placeholder="e.g., Aluminum Alloy">
+                    </div>
+                    <div class="form-group">
+                        <label for="specWeight">Weight</label>
+                        <input type="text" id="specWeight" placeholder="e.g., 0.8 kg">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="specCompatibility">Compatibility</label>
+                        <input type="text" id="specCompatibility"
+                            placeholder="e.g., Honda Click 125, Click 150, Click 160">
+                    </div>
+                    <div class="form-group">
+                        <label for="specWarranty">Warranty</label>
+                        <input type="text" id="specWarranty" placeholder="e.g., 1 year">
+                    </div>
+                </div>
+
+                <div id="customSpecsContainer" style="margin-top: 15px;">
+                    <!-- Custom specifications will be added here dynamically -->
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button type="button" class="add-spec-btn" onclick="addCustomSpecification()"
+                        style="padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                        ➕ Add Specification
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeAddProductModal()">Cancel</button>
+                    <button type="submit" class="submit-btn">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div id="editProductModal" class="modal hidden">
+        <div class="modal-content large-modal">
+            <span class="close-modal" onclick="closeEditProductModal()">&times;</span>
+            <h2>✏️ Edit Product</h2>
+            <form id="editProductForm" onsubmit="handleEditProduct(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editProductName">Product Name *</label>
+                        <input type="text" id="editProductName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductBrand">Brand *</label>
+                        <select id="editProductBrand" required onchange="handleEditBrandSelection()">
+                            <option value="">Select Brand</option>
+                            <option value="Honda">Honda</option>
+                            <option value="Yamaha">Yamaha</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="editCustomBrandInput" class="custom-brand-input hidden"
+                            placeholder="Enter brand name"
+                            style="margin-top: 8px; width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editProductCategory">Category *</label>
+                        <select id="editProductCategory" required onchange="handleEditCategorySelection()">
+                            <option value="">Select Category</option>
+                            <option value="engine">Engine Parts</option>
+                            <option value="brake">Brake Systems</option>
+                            <option value="tire">Tires</option>
+                            <option value="exhaust">Exhaust Systems</option>
+                            <option value="suspension">Suspension</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="editCustomCategoryInput" class="custom-category-input hidden"
+                            placeholder="Enter category name"
+                            style="margin-top: 8px; width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductPrice">Price (₱) *</label>
+                        <input type="number" id="editProductPrice" required min="0" step="0.01">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editProductQuantity">Stock Quantity *</label>
+                        <input type="number" id="editProductQuantity" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductImage">Image URL</label>
+                        <input type="url" id="editProductImage">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editProductDescription">Description</label>
+                    <textarea id="editProductDescription" rows="3"></textarea>
+                </div>
+
+                <h3 style="margin-top: 20px; margin-bottom: 10px;">Product Specifications</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editSpecMaterial">Material</label>
+                        <input type="text" id="editSpecMaterial">
+                    </div>
+                    <div class="form-group">
+                        <label for="editSpecWeight">Weight</label>
+                        <input type="text" id="editSpecWeight">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editSpecCompatibility">Compatibility</label>
+                        <input type="text" id="editSpecCompatibility">
+                    </div>
+                    <div class="form-group">
+                        <label for="editSpecWarranty">Warranty</label>
+                        <input type="text" id="editSpecWarranty">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeEditProductModal()">Cancel</button>
+                    <button type="submit" class="submit-btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
